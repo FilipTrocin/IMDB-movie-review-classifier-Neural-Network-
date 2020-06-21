@@ -33,3 +33,27 @@ test_dt = keras.preprocessing.sequence.pad_sequences(test_dt, maxlen=2494, value
 def decoder(text_item, index_of_words):
     return " ".join([index_of_words[x] for x in text_item])
 
+
+# defining model
+model = keras.Sequential()
+model.add(keras.layers.Embedding(88_000, 16))
+model.add(keras.layers.GlobalAveragePooling1D())
+model.add(keras.layers.Dense(16, activation='relu'))
+model.add(keras.layers.Dense(1, activation='sigmoid'))
+
+model.summary()  # prints string summary of network
+
+# binary_crossentropy because of sigmoid activation function which returns probability
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Data validation
+x_validation = train_dt[:10_000]
+x_train = train_dt[10_000:]
+y_validation = train_lb[:10_000]
+y_train = train_lb[10_000:]
+
+model.fit(x_train, y_train, batch_size=512, epochs=45, verbose=1, validation_data=(x_validation, y_validation))
+
+results = model.evaluate(test_dt, test_lb)
+
+
