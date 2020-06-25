@@ -1,16 +1,15 @@
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
-import pickle
 
 data = keras.datasets.imdb
 
-(train_dt, train_lb), (test_dt, test_lb) = data.load_data(num_words=88_000)  # taking 10_000 most repeatable words
+# words are represented by numbers
+(train_dt, train_lb), (test_dt, test_lb) = data.load_data(num_words=88_000)  # taking 88_000 most repeatable words
 
 word_index = data.get_word_index()  # key-value dictionary (key: word, value: number)
 
 # Increasing every value by 3 in a word index e.g. 'the' was 1 and then 'the' will be 4
-# Swapping key-values together e.g. word_index['plot'] = 114 but I want reversed_word_index[114] = plot
 word_index = {k: (v+3) for k, v in word_index.items()}
 
 # Reserving values 0-3 to give them another meaning. Words denoted previously by these values won't be changed,
@@ -22,6 +21,7 @@ word_index['<UNUSED>'] = 3
 
 
 # Reversing key and values together in dictionary
+# Swapping key-values together e.g. word_index['plot'] = 114 but I want reversed_word_index[114] = plot
 reversed_word_index = dict([(value, key) for (key, value) in word_index.items()])
 
 
@@ -33,7 +33,7 @@ test_dt = keras.preprocessing.sequence.pad_sequences(test_dt, maxlen=2494, value
 def decoder(text_item, index_of_words):
     return " ".join([index_of_words[x] for x in text_item])
 
-
+'''
 # defining model
 model = keras.Sequential()
 model.add(keras.layers.Embedding(88_000, 16))
@@ -55,5 +55,8 @@ y_train = train_lb[10_000:]
 model.fit(x_train, y_train, batch_size=512, epochs=45, verbose=1, validation_data=(x_validation, y_validation))
 
 results = model.evaluate(test_dt, test_lb)
+'''
+
+model = keras.models.load_model('IMDBmodel.h5')
 
 
