@@ -60,3 +60,13 @@ results = model.evaluate(test_dt, test_lb)
 model = keras.models.load_model('IMDBmodel.h5')
 
 
+
+
+
+test_review = test_dt[5]
+print('Decoded review: ')
+print(decoder(test_review, reversed_word_index))
+predict = model.predict([test_review])
+print('Predicted: ', str(predict[5]))
+print('Actual: ', str(test_lb[5]))
+print('Evaluation values: ', results)
