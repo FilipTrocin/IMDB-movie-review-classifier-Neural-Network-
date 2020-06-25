@@ -56,13 +56,31 @@ model.fit(x_train, y_train, batch_size=512, epochs=45, verbose=1, validation_dat
 
 results = model.evaluate(test_dt, test_lb)
 '''
-
 model = keras.models.load_model('IMDBmodel.h5')
 
 
+def external_review(path):
+    with open(path) as f:
+        i = 0
+        for line in f.readlines():
+            num_words = len(line.lower().split())
+            # size of the array can't be greater than the one declared in model before
+            arr = np.ones(shape=num_words, dtype='int32')
+            for word in line.lower().split():
+                number = word_index.get(word, 2)
+                arr[i] = number
+                i += 1
+            np.set_printoptions(threshold=np.inf)
+            print('Prediction: ', model.predict(arr))
+            print('Actual: 1')
+            print('number of words: ', num_words)
+            return arr
 
 
+print(external_review('the_pianist_review.txt'))
 
+
+'''
 test_review = test_dt[5]
 print('Decoded review: ')
 print(decoder(test_review, reversed_word_index))
@@ -70,3 +88,4 @@ predict = model.predict([test_review])
 print('Predicted: ', str(predict[5]))
 print('Actual: ', str(test_lb[5]))
 print('Evaluation values: ', results)
+'''
