@@ -19,6 +19,8 @@ word_index['<START>'] = 1
 word_index['<UNK>'] = 2
 word_index['<UNUSED>'] = 3
 
+# print(word_index['Poland'])
+
 
 # Reversing key and values together in dictionary
 # Swapping key-values together e.g. word_index['plot'] = 114 but I want reversed_word_index[114] = plot
@@ -63,15 +65,16 @@ def external_review(path):
     with open(path) as f:
         i = 0
         for line in f.readlines():
-            num_words = len(line.lower().split())
+            num_words = len(line.split())
             # size of the array can't be greater than the one declared in model before
             arr = np.ones(shape=num_words, dtype='int32')
             for word in line.lower().split():
-                number = word_index.get(word, 2)
+                removed_char = word.replace('.', '').replace(',', '').replace('(', '').replace(')', '').replace(':', '')
+                number = word_index.get(removed_char, 2)
                 arr[i] = number
                 i += 1
             np.set_printoptions(threshold=np.inf)
-            print('Prediction: ', model.predict(arr))
+            # print('Prediction: ', model.predict(arr))
             print('Actual: 1')
             print('number of words: ', num_words)
             return arr
