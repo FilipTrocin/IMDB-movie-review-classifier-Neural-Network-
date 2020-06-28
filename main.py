@@ -78,10 +78,10 @@ def external_review(path):
             print('arr length: ', len(arr))
             np.set_printoptions(threshold=np.inf)
             predict = model.predict(arr)
-            print('Prediction: ', predict[0])
+            print('Probability review is positive: ', predict[0])
 
 
-print(external_review('the_pianist_review.txt'))
+external_review('user_review.txt')
 
 
 '''
