@@ -8,3 +8,9 @@ User can add it's own review and the program will determine the probability of p
 2. Run the program again
 
 NOTE: each review must be placed in one line, review must be written in English.
+
+
+#### Prerequisites:
+* installed python 3.7
+* installed tensorflow
+* instlled numpy
