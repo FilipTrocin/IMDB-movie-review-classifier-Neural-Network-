@@ -19,13 +19,10 @@ word_index['<START>'] = 1
 word_index['<UNK>'] = 2
 word_index['<UNUSED>'] = 3
 
-# print(word_index['Poland'])
-
 
 # Reversing key and values together in dictionary
 # Swapping key-values together e.g. word_index['plot'] = 114 but I want reversed_word_index[114] = plot
 reversed_word_index = dict([(value, key) for (key, value) in word_index.items()])
-
 
 # Preprocessing data: defined padding (making it the same length)
 train_dt = keras.preprocessing.sequence.pad_sequences(train_dt, maxlen=2494, value=word_index['<PAD>'], padding='post')
@@ -34,6 +31,7 @@ test_dt = keras.preprocessing.sequence.pad_sequences(test_dt, maxlen=2494, value
 
 def decoder(text_item, index_of_words):
     return " ".join([index_of_words[x] for x in text_item])
+
 
 '''
 # defining model
@@ -66,18 +64,21 @@ def external_review(path):
         i = 0
         for line in f.readlines():
             num_words = len(line.split())
-            # size of the array can't be greater than the one declared in model before
+            print('Total number of words in file: ', num_words)
+            # Note: size of the array can't be greater than the one declared in model before (2494)
             arr = np.ones(shape=num_words, dtype='int32')
             for word in line.lower().split():
                 removed_char = word.replace('.', '').replace(',', '').replace('(', '').replace(')', '').replace(':', '')
                 number = word_index.get(removed_char, 2)
                 arr[i] = number
                 i += 1
+            # first parameter is a list - "predict" will take all of the words together rather than making prediction on
+            # a singular word (whether is positive or negative)
+            arr = keras.preprocessing.sequence.pad_sequences([arr], maxlen=2494, value=word_index['<PAD>'], padding='post')
+            print('arr length: ', len(arr))
             np.set_printoptions(threshold=np.inf)
-            # print('Prediction: ', model.predict(arr))
-            print('Actual: 1')
-            print('number of words: ', num_words)
-            return arr
+            predict = model.predict(arr)
+            print('Prediction: ', predict[0])
 
 
 print(external_review('the_pianist_review.txt'))
