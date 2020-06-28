@@ -75,7 +75,6 @@ def external_review(path):
             # first parameter is a list - "predict" will take all of the words together rather than making prediction on
             # a singular word (whether is positive or negative)
             arr = keras.preprocessing.sequence.pad_sequences([arr], maxlen=2494, value=word_index['<PAD>'], padding='post')
-            print('arr length: ', len(arr))
             np.set_printoptions(threshold=np.inf)
             predict = model.predict(arr)
             print('Probability review is positive: ', predict[0])
